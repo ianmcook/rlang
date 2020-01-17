@@ -391,5 +391,5 @@ expr_print <- function(x, width = peek_option("width"), max_len = 5L) {
 #' @export
 expr_deparse <- function(x, width = peek_option("width"), max_len = 5L) {
   deparser <- new_quo_deparser(width = width)
-  quo_deparse(x, deparser)
+  quo_deparse(x, deparser, max_len)
 }
