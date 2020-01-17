@@ -603,15 +603,15 @@ is_scalar_deparsable <- function(x) {
   typeof(x) != "raw" && length(x) == 1 && !is_named(x)
 }
 
-atom_deparse <- function(x, lines = new_lines()) {
+atom_deparse <- function(x, lines = new_lines(),  max_len = 5L) {
   if (is_scalar_deparsable(x)) {
     lines$push(deparse(x))
     return(NULL)
   }
 
-  truncated <- length(x) > 5L
+  truncated <- !is.null(max_len) && length(x) > max_len
   if (truncated) {
-    x <- .subset(x, 1:5)
+    x <- .subset(x, 1:max_len)
   }
 
   lines$push(paste0("<", rlang_type_sum(x), ": "))
@@ -646,7 +646,7 @@ atom_deparse <- function(x, lines = new_lines()) {
   lines$get_lines()
 }
 
-list_deparse <- function(x, lines = new_lines()) {
+list_deparse <- function(x, lines = new_lines(), max_len = 5L) {
   if (!length(x) && !is_null(names(x))) {
     lines$push("<named list>")
     return(lines$get_lines())
@@ -655,9 +655,9 @@ list_deparse <- function(x, lines = new_lines()) {
   lines$push(paste0("<list: "))
   lines$increase_indent()
 
-  truncated <- length(x) > 5L
+  truncated <- !is.null(max_len) && length(x) > max_len
   if (truncated) {
-    x <- .subset(x, 1:5)
+    x <- .subset(x, 1:max_len)
   }
 
   nms <- names2(x)
@@ -703,7 +703,7 @@ default_deparse <- function(x, lines = new_lines()) {
   lines$get_lines()
 }
 
-sexp_deparse <- function(x, lines = new_lines()) {
+sexp_deparse <- function(x, lines = new_lines(), max_len = 5L) {
   if (is.object(x)) {
     return(s3_deparse(x, lines))
   }
@@ -723,8 +723,8 @@ sexp_deparse <- function(x, lines = new_lines()) {
     double = ,
     complex = ,
     character = ,
-    raw = atom_deparse,
-    list = list_deparse,
+    raw = function(x, lines) atom_deparse(x, lines, max_len),
+    list = function(x, lines) list_deparse(x, lines, max_len),
     default_deparse
   )
   deparser(x, lines)
