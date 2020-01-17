@@ -572,7 +572,7 @@ base_deparse <- function(x) {
 
 quo_deparse <- function(x, lines = new_quo_deparser(),  max_len = 5L) {
   if (!is_quosure(x)) {
-    return(sexp_deparse(x, lines = lines))
+    return(sexp_deparse(x, lines = lines, max_len))
   }
 
   env <- quo_get_env(x)
