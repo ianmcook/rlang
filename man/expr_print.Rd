@@ -5,9 +5,9 @@
 \alias{expr_deparse}
 \title{Print an expression}
 \usage{
-expr_print(x, width = peek_option("width"), max_len = 5L)
+expr_print(x, width = peek_option("width"), max_elements = 5L)
 
-expr_deparse(x, width = peek_option("width"), max_len = 5L)
+expr_deparse(x, width = peek_option("width"), max_elements = 5L)
 }
 \arguments{
 \item{x}{An object or expression to print.}
@@ -15,7 +15,7 @@ expr_deparse(x, width = peek_option("width"), max_len = 5L)
 \item{width}{The width of the deparsed or printed expression.
 Defaults to the global option \code{width}.}
 
-\item{max_len}{Maximum length of a vector or list before truncation
+\item{max_elements}{Maximum length of a vector or list before truncation
 occurs. Defaults to 5L.}
 }
 \description{

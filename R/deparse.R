@@ -603,15 +603,15 @@ is_scalar_deparsable <- function(x) {
   typeof(x) != "raw" && length(x) == 1 && !is_named(x)
 }
 
-atom_deparse <- function(x, lines = new_lines(),  max_len = 5L) {
+atom_deparse <- function(x, lines = new_lines(),  max_elements = 5L) {
   if (is_scalar_deparsable(x)) {
     lines$push(deparse(x))
     return(NULL)
   }
 
-  truncated <- !is.null(max_len) && length(x) > max_len
+  truncated <- !is.null(max_elements) && length(x) > max_elements
   if (truncated) {
-    x <- .subset(x, seq_len(max_len))
+    x <- .subset(x, seq_len(max_elements))
   }
 
   lines$push(paste0("<", rlang_type_sum(x), ": "))
@@ -645,7 +645,7 @@ atom_deparse <- function(x, lines = new_lines(),  max_len = 5L) {
   lines$get_lines()
 }
 
-list_deparse <- function(x, lines = new_lines(), max_len = 5L) {
+list_deparse <- function(x, lines = new_lines(), max_elements = 5L) {
   if (!length(x) && !is_null(names(x))) {
     lines$push("<named list>")
     return(lines$get_lines())
@@ -654,9 +654,9 @@ list_deparse <- function(x, lines = new_lines(), max_len = 5L) {
   lines$push(paste0("<list: "))
   lines$increase_indent()
 
-  truncated <- !is.null(max_len) && length(x) > max_len
+  truncated <- !is.null(max_elements) && length(x) > max_elements
   if (truncated) {
-    x <- .subset(x, seq_len(max_len))
+    x <- .subset(x, seq_len(max_elements))
   }
 
   nms <- names2(x)
@@ -701,12 +701,12 @@ default_deparse <- function(x, lines = new_lines()) {
   lines$get_lines()
 }
 
-sexp_deparse <- function(x, lines = new_lines(), max_len = 5L) {
+sexp_deparse <- function(x, lines = new_lines(), max_elements = 5L) {
   if (is.object(x)) {
     return(s3_deparse(x, lines))
   }
-  if (!is_null(max_len)) {
-    stopifnot(is_scalar_integerish(max_len))
+  if (!is_null(max_elements)) {
+    stopifnot(is_scalar_integerish(max_elements))
   }
 
   deparser <- switch (typeof(x),
@@ -724,8 +724,8 @@ sexp_deparse <- function(x, lines = new_lines(), max_len = 5L) {
     double = ,
     complex = ,
     character = ,
-    raw = function(x, lines) atom_deparse(x, lines, max_len),
-    list = function(x, lines) list_deparse(x, lines, max_len),
+    raw = function(x, lines) atom_deparse(x, lines, max_elements),
+    list = function(x, lines) list_deparse(x, lines, max_elements),
     default_deparse
   )
   deparser(x, lines)
