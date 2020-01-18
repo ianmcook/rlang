@@ -630,13 +630,12 @@ atom_deparse <- function(x, lines = new_lines(),  max_len = 5L) {
 
     lines$push(elts[[i]])
 
-    if (i != n) {
+    if (i != n || truncated) {
       lines$push_sticky(", ")
     }
   }
 
   if (truncated) {
-    lines$push_sticky(", ")
     lines$push("...")
   }
 
@@ -672,13 +671,12 @@ list_deparse <- function(x, lines = new_lines(), max_len = 5L) {
 
     lines$deparse(x[[i]])
 
-    if (i != n) {
+    if (i != n || truncated) {
       lines$push_sticky(", ")
     }
   }
 
   if (truncated) {
-    lines$push_sticky(", ")
     lines$push("...")
   }
 
