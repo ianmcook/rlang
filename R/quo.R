@@ -572,7 +572,7 @@ base_deparse <- function(x) {
 
 quo_deparse <- function(x, lines = new_quo_deparser(),  max_elements = 5L) {
   if (!is_quosure(x)) {
-    return(sexp_deparse(x, lines = lines, max_elements))
+    return(sexp_deparse(x, lines = lines, max_elements = max_elements))
   }
 
   env <- quo_get_env(x)
@@ -580,7 +580,7 @@ quo_deparse <- function(x, lines = new_quo_deparser(),  max_elements = 5L) {
 
   lines$push("^")
   lines$make_next_sticky()
-  sexp_deparse(quo_get_expr(x), lines, max_elements)
+  sexp_deparse(quo_get_expr(x), lines = lines, max_elements = max_elements)
 
   lines$quo_reset_colour()
 
