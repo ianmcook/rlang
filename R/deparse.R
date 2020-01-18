@@ -707,6 +707,9 @@ sexp_deparse <- function(x, lines = new_lines(), max_len = 5L) {
   if (is.object(x)) {
     return(s3_deparse(x, lines))
   }
+  if (!is_null(max_len)) {
+    stopifnot(is_scalar_integerish(max_len))
+  }
 
   deparser <- switch (typeof(x),
     symbol = sym_deparse,
