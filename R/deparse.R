@@ -611,7 +611,7 @@ atom_deparse <- function(x, lines = new_lines(),  max_len = 5L) {
 
   truncated <- !is.null(max_len) && length(x) > max_len
   if (truncated) {
-    x <- .subset(x, 1:max_len)
+    x <- .subset(x, seq_len(max_len))
   }
 
   lines$push(paste0("<", rlang_type_sum(x), ": "))
@@ -657,7 +657,7 @@ list_deparse <- function(x, lines = new_lines(), max_len = 5L) {
 
   truncated <- !is.null(max_len) && length(x) > max_len
   if (truncated) {
-    x <- .subset(x, 1:max_len)
+    x <- .subset(x, seq_len(max_len))
   }
 
   nms <- names2(x)
